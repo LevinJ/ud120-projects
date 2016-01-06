@@ -28,14 +28,25 @@ features_train, features_test, labels_train, labels_test = preprocess()
 ### your code goes here ###
 
 #########################################################
-clf = SVC(kernel='linear')
+# features_train = features_train[:len(features_train)/100]
+# labels_train = labels_train[:len(labels_train)/100]
+
+print "training sample number: ", len(features_train)
+clf = SVC(kernel='rbf',C=10000.0)
 t0 = time()
 clf = clf.fit(features_train, labels_train)
 print "training time:", round(time()-t0, 3), "s"
 t0 = time()
 y_pred=clf.predict(features_test)
 print "prediction time:", round(time()-t0, 3), "s"
+print "10:%d,26:%d,50:%d" %(y_pred[10],y_pred[26],y_pred[50])
+print "sum of chris", y_pred.sum()
 
 accuracy = accuracy_score(labels_test,y_pred )
-print "accuracy is %f" %(accuracy)
+print "testing set accuracy is %f" %(accuracy)
+
+#for training set
+# y_pred=clf.predict(features_train)
+# accuracy = accuracy_score(labels_train,y_pred )
+# print "training set accuracy is %f" %(accuracy)
 
