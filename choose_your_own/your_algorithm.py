@@ -3,9 +3,16 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from pre_algorithms import getClf
+from sklearn.metrics import accuracy_score
+from time import time
+from sklearn.cross_validation import cross_val_score
+from PIL import Image 
+
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
+print "training number: %d, testing number: %d original feature num %d" %(len(labels_train), len(labels_test), len(features_train[0]))
 
 ### the training data (features_train, labels_train) have both "fast" and "slow"
 ### points mixed together--separate them so we can give them different colors
@@ -24,21 +31,39 @@ plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
 plt.legend()
 plt.xlabel("bumpiness")
 plt.ylabel("grade")
-plt.show()
+# plt.show()
 ################################################################################
 
 
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
 
+clf = getClf()
 
+print "start training..."
+t0 = time()
+clf = clf.fit(features_train, labels_train)
+print "training time:", round(time()-t0, 3), "s"
 
+#for testing set
+t0 = time()
+y_pred=clf.predict(features_test)
+print "prediction time:", round(time()-t0, 3), "s"
+accuracy = accuracy_score(labels_test,y_pred )
+print "testing set accuracy is %f" %(accuracy)
 
+#for training set
+# y_pred=clf.predict(features_train)
+# accuracy = accuracy_score(labels_train,y_pred )
+accuracy = clf.score(features_train,labels_train)
+print "training set accuracy is %f" %(accuracy)
 
 
 
 
 try:
     prettyPicture(clf, features_test, labels_test)
+    image = Image.open("test.png")
+    image.show()
 except NameError:
     pass

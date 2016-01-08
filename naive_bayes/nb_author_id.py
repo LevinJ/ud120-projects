@@ -28,16 +28,20 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
-gnb = GaussianNB()
+clf = GaussianNB()
 t0 = time()
-gnb = gnb.fit(features_train, labels_train)
+clf = clf.fit(features_train, labels_train)
 print "training time:", round(time()-t0, 3), "s"
 t0 = time()
-y_pred=gnb.predict(features_test)
+y_pred=clf.predict(features_test)
 print "prediction time:", round(time()-t0, 3), "s"
 
 accuracy = accuracy_score(labels_test,y_pred )
-print "accuracy is %f" %(accuracy)
+print "testing set accuracy is %f" %(accuracy)
+
+y_pred=clf.predict(features_train)
+accuracy = accuracy_score(labels_train,y_pred )
+print "training set accuracy is %f" %(accuracy)
 
 
 #########################################################

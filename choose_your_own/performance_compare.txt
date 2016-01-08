@@ -1,0 +1,29 @@
+###### Naive Bayes######
+
+training time: 0.001 s
+prediction time: 0.0 s
+testing set accuracy is 0.884000
+training set accuracy is 0.900000
+
+
+###### SVM######
+
+training time: 113.223 s
+prediction time: 11.432 s
+testing set accuracy is 0.990899
+training set accuracy is 0.996587
+
+
+###### Decision tree######
+
+training time: 0.002 s
+prediction time: 0.0 s
+testing set accuracy is 0.924000
+training set accuracy is 0.978667
+
+
+
+###### Adaboost######
+
+testing set accuracy is 0.920000
+training set accuracy is 0.994667
