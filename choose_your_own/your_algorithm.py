@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from time import time
 from sklearn.cross_validation import cross_val_score
 from PIL import Image 
+import numpy as np
 
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
@@ -17,20 +18,6 @@ print "training number: %d, testing number: %d original feature num %d" %(len(la
 ### the training data (features_train, labels_train) have both "fast" and "slow"
 ### points mixed together--separate them so we can give them different colors
 ### in the scatterplot and identify them visually
-grade_fast = [features_train[ii][0] for ii in range(0, len(features_train)) if labels_train[ii]==0]
-bumpy_fast = [features_train[ii][1] for ii in range(0, len(features_train)) if labels_train[ii]==0]
-grade_slow = [features_train[ii][0] for ii in range(0, len(features_train)) if labels_train[ii]==1]
-bumpy_slow = [features_train[ii][1] for ii in range(0, len(features_train)) if labels_train[ii]==1]
-
-
-#### initial visualization
-plt.xlim(0.0, 1.0)
-plt.ylim(0.0, 1.0)
-plt.scatter(bumpy_fast, grade_fast, color = "b", label="fast")
-plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
-plt.legend()
-plt.xlabel("bumpiness")
-plt.ylabel("grade")
 # plt.show()
 ################################################################################
 
@@ -59,7 +46,26 @@ accuracy = clf.score(features_train,labels_train)
 print "training set accuracy is %f" %(accuracy)
 
 
-
+#analyze adaboost
+# plt.figure(2)
+# class_names = "AB"
+# plot_colors = "br"
+# twoclass_output = clf.decision_function(features_test)
+# plot_range = (twoclass_output.min(), twoclass_output.max())
+# for i, n, c in zip(range(2), class_names, plot_colors):
+#     plt.hist(twoclass_output[np.array(labels_test) == i],
+#              bins=10,
+#              range=plot_range,
+#              facecolor=c,
+#              label='Class %s' % n,
+#              alpha=.5)
+# x1, x2, y1, y2 = plt.axis()
+# plt.axis((x1, x2, y1, y2 * 1.2))
+# plt.legend(loc='upper right')
+# plt.ylabel('Samples')
+# plt.xlabel('Score')
+# plt.title('Decision Scores')
+# plt.show()
 
 try:
     prettyPicture(clf, features_test, labels_test)
