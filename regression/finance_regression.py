@@ -16,12 +16,14 @@
 import sys
 import pickle
 sys.path.append("../tools/")
+from sklearn.linear_model import LinearRegression
 from feature_format import featureFormat, targetFeatureSplit
 dictionary = pickle.load( open("../final_project/final_project_dataset_modified.pkl", "r") )
 
 ### list the features you want to look at--first item in the 
 ### list will be the "target" feature
 features_list = ["bonus", "salary"]
+# features_list = ["bonus", "long_term_incentive"]
 data = featureFormat( dictionary, features_list, remove_any_zeroes=True)
 target, features = targetFeatureSplit( data )
 
@@ -29,7 +31,7 @@ target, features = targetFeatureSplit( data )
 from sklearn.cross_validation import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(features, target, test_size=0.5, random_state=42)
 train_color = "b"
-test_color = "b"
+test_color = "r"
 
 
 
@@ -39,7 +41,12 @@ test_color = "b"
 ### "r" to differentiate training points from test points.
 
 
-
+reg = LinearRegression()
+reg.fit(feature_train, target_train)
+print "reg.intercept_", reg.intercept_
+print 'reg.coef_',reg.coef_
+print 'score on training data',reg.score(feature_train, target_train)
+print 'score on testing data',reg.score(feature_test, target_test)
 
 
 
@@ -64,6 +71,9 @@ try:
     plt.plot( feature_test, reg.predict(feature_test) )
 except NameError:
     pass
+reg.fit(feature_test, target_test)
+plt.plot(feature_train, reg.predict(feature_train), color="b") 
+print 'new slope', reg.coef_
 plt.xlabel(features_list[1])
 plt.ylabel(features_list[0])
 plt.legend()
