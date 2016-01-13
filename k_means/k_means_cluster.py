@@ -8,8 +8,9 @@
 
 
 import pickle
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
@@ -85,6 +86,9 @@ data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
 
+nparr = np.array(finance_features)
+df = pd.DataFrame({'salary':nparr[:,0], 'exercised_stock_options':nparr[:,1]})
+print df.describe()
 ### in the "clustering with 3 features" part of the mini-project,
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
