@@ -12,3 +12,4 @@ my_feature_list.pkl
 .pydevproject
 test.png
 .settings
+k_means/clusters.pdf

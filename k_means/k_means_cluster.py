@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
+from sklearn.cluster import KMeans
 
 
 
@@ -44,12 +45,42 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 data_dict.pop("TOTAL", 0)
 
 
+def isNaN(num):
+    return num == "NaN"
+def findLargestOutlier():
+    min_exercised_stock_options=0
+    max_exercised_stock_options = 0
+    min_salary=5e10
+    max_salary=0
+    for key, value in data_dict.iteritems():
+        if not (isNaN(value['exercised_stock_options'])):
+            if min_exercised_stock_options == 0:
+                min_exercised_stock_options = value['exercised_stock_options']
+            if (value['exercised_stock_options'] < min_exercised_stock_options):
+                min_exercised_stock_options = value['exercised_stock_options']
+            if max_exercised_stock_options == 0:
+                max_exercised_stock_options = value['exercised_stock_options']
+            if (value['exercised_stock_options'] > max_exercised_stock_options):
+                max_exercised_stock_options = value['exercised_stock_options']
+        if not isNaN(value['salary']):       
+            if (value['salary'] < min_salary):
+                min_salary = value['salary']
+            if (value['salary'] > max_salary):
+                max_salary = value['salary']
+    print "min_exercised_stock_options", min_exercised_stock_options           
+    print "max_exercised_stock_options", max_exercised_stock_options
+    print "min_salary", min_salary
+    print "max_salary", max_salary
+    return
+
+findLargestOutlier()
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
 poi  = "poi"
 features_list = [poi, feature_1, feature_2]
+# features_list = [poi, feature_1, feature_2, "total_payments"]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -58,13 +89,19 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
+# for f1, f2,f3 in finance_features:
 for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
-plt.show()
+#plt.show()
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
+
+cluster_alg = KMeans(n_clusters=2, random_state=42)
+
+cluster_alg.fit(finance_features)
+pred = cluster_alg.predict(finance_features)
 
 
 
