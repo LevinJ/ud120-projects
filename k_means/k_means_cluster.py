@@ -15,6 +15,7 @@ import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 from sklearn.cluster import KMeans
+from sklearn import preprocessing
 
 
 
@@ -94,6 +95,12 @@ print df.describe()
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
 # for f1, f2,f3 in finance_features:
+nparr = nparr.astype(np.float64)
+min_max_scaler = preprocessing.MinMaxScaler()
+finance_features = min_max_scaler.fit_transform(nparr)
+temparr = np.array([[200000.0, 1000000.0]])
+print min_max_scaler.transform(temparr)
+
 for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
 #plt.show()
