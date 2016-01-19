@@ -1,6 +1,7 @@
 #!/usr/bin/python
-
+# from __future__ import print_function
 from nltk.stem.snowball import SnowballStemmer
+
 import string
 
 def parseOutText(f):
@@ -28,7 +29,11 @@ def parseOutText(f):
         text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
 
         ### project part 2: comment out the line below
-        words = text_string
+#         words = text_string
+        text_string = text_string.split()
+        stemmer = SnowballStemmer("english")
+        singles = [stemmer.stem(plural) for plural in text_string]
+        words = ' '.join(singles)
 
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
@@ -45,7 +50,11 @@ def parseOutText(f):
 def main():
     ff = open("../text_learning/test_email.txt", "r")
     text = parseOutText(ff)
-    print text
+    print(text)
+#     stemmer = SnowballStemmer("english")
+#     plurals = ['caresses', 'flies', 'dies', 'mules', 'denied']
+#     singles = [stemmer.stem(plural) for plural in plurals]
+#     print(' '.join(singles))
 
 
 
