@@ -6,6 +6,8 @@ sys.path.append("../tools/")
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
+import tester
+
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
@@ -53,3 +55,10 @@ features_train, features_test, labels_train, labels_test = \
 ### generates the necessary .pkl files for validating your results.
 
 dump_classifier_and_data(clf, my_dataset, features_list)
+
+
+def main():
+    tester.main()
+
+if __name__ == '__main__':
+    main()
