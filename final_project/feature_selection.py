@@ -20,11 +20,11 @@ class Feature_Selection_Proxy:
         return
     def run(self):
         #add new features
-        self.__addFractionFeactures() 
+        self.addFractionFeactures() 
         test = data_exploration.Data_Exploration_Proxy(self.data_dict)
         
         #now evaluate existing features
-        features_list = self.__selectFeatures()
+        features_list = self.selectFeatures('7')
         #rank feature importance and reorder
         features_rank =  self.__featureImportance(features_list)
         features_list = features_list[0:1] +  features_rank.tolist()
@@ -32,7 +32,7 @@ class Feature_Selection_Proxy:
         test.run(features_list)
         
         return
-    def __selectFeatures(self):
+    def selectFeatures(self,sel):
         feaDict = {}
         feaDict['1'] = ['poi','bonus','salary']
         feaDict['2'] = ['poi','from_poi_to_this_person','from_this_person_to_poi']
@@ -41,7 +41,8 @@ class Feature_Selection_Proxy:
         test =  data_exploration.Data_Exploration_Proxy(self.data_dict) 
         feaDict['5'] = test.getAllFeatures()
         feaDict['6'] = ['poi','exercised_stock_options', 'expenses', 'other', 'fraction_to_poi']
-        return feaDict['5']
+        feaDict['7'] = ['poi','exercised_stock_options', 'fraction_to_poi']
+        return feaDict[sel]
     def __computeFraction(self,poi_messages, all_messages ):
         fraction = 0.
         if (poi_messages == 'NaN'or  all_messages == 'NaN'):
@@ -72,7 +73,7 @@ class Feature_Selection_Proxy:
         features_rank = np.array(features_list[1:])[sortIndexes]
         print "decision tree importance rank: ", features_rank
         return features_rank
-    def __addFractionFeactures(self):
+    def addFractionFeactures(self):
         print "add fraction feature to the data dictionary"
         data_dict = self.data_dict
         for name in data_dict:
