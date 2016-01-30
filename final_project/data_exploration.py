@@ -3,6 +3,7 @@
 import sys
 import pickle
 sys.path.append("../tools/")
+import matplotlib.pyplot as plt
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
@@ -14,12 +15,31 @@ import pandas as pd
 class Data_Exploration_Proxy:
     def __init__(self,data_dict):
         self.data_dict = data_dict
+        self.data_dict.pop('TOTAL', 0)
         return
     def run(self):
 #         features_list = self.__getAllFeatures()
         features_list = ['poi','salary','bonus']
         self.__dispBasicStatistics(features_list)
-        self.__saveToCsv(features_list)
+        self.__saveSelectedDataToCsv(features_list)
+        self.__visuallizeSelectedData(features_list)
+        return
+    def __getColor(self,item):
+        if item == 1:
+            #the item is a poi
+            return 'r'
+        else:
+            return 'b'
+    def __visuallizeSelectedData(self, features_list):
+        print "visualize selected dataset"
+        #only visualize the first two features
+        data = featureFormat(self.data_dict, features_list, sort_keys = True)
+        labels, features = targetFeatureSplit(data)
+        features = np.array(features)
+        colorsList = [self.__getColor(label) for label in labels]
+        plt.figure()
+        plt.scatter(features[:,0],features[:,1], c=colorsList)
+        plt.show()
         return
     def __identifyAllZeros(self, features_list):
         #identify the record which has all zeros features
@@ -45,7 +65,7 @@ class Data_Exploration_Proxy:
         features_list.insert(0, 'poi')
         features_list.remove('email_address')
         return features_list
-    def __saveToCsv(self,features_list):
+    def __saveSelectedDataToCsv(self,features_list):
         print "Save selected data to csv"
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         df = pd.DataFrame(data, columns=features_list)
