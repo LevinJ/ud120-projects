@@ -17,12 +17,10 @@ class Data_Exploration_Proxy:
         self.data_dict = data_dict
         self.data_dict.pop('TOTAL', 0)
         return
-    def run(self):
-#         features_list = self.__getAllFeatures()
-        features_list = ['poi','salary','bonus']
+    def run(self,features_list):
         self.__dispBasicStatistics(features_list)
         self.__saveSelectedDataToCsv(features_list)
-        self.__visuallizeSelectedData(features_list)
+        self.__visuallizeSelectedData(features_list)     
         return
     def __getColor(self,item):
         if item == 1:
@@ -31,7 +29,7 @@ class Data_Exploration_Proxy:
         else:
             return 'b'
     def __visuallizeSelectedData(self, features_list):
-        print "visualize selected dataset"
+        print "visualize selected dataset: ", features_list
         #only visualize the first two features
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
@@ -39,6 +37,8 @@ class Data_Exploration_Proxy:
         colorsList = [self.__getColor(label) for label in labels]
         plt.figure()
         plt.scatter(features[:,0],features[:,1], c=colorsList)
+        plt.xlabel(features_list[1])
+        plt.ylabel(features_list[2])
         plt.show()
         return
     def __identifyAllZeros(self, features_list):
@@ -59,7 +59,7 @@ class Data_Exploration_Proxy:
                 numAllZeros = numAllZeros + 1
         print "Total number of removed all zeros records; ", numAllZeros
         return
-    def __getAllFeatures(self):
+    def getAllFeatures(self):
         features_list = self.data_dict['ALLEN PHILLIP K'].keys()
         features_list.remove('poi')
         features_list.insert(0, 'poi')
@@ -70,6 +70,7 @@ class Data_Exploration_Proxy:
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         df = pd.DataFrame(data, columns=features_list)
         df.to_csv('selecteddata.csv')
+        print df.describe()
         return
     def __dispBasicStatistics(self, features_list):
         print "display basic statistics about the data set"
@@ -91,7 +92,9 @@ def main():
     with open("final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
     test =  Data_Exploration_Proxy(data_dict) 
-    test.run()
+    features_list = test.getAllFeatures()
+#     features_list = ['poi','bonus','salary']
+    test.run(features_list)
 
 if __name__ == '__main__':
     main()
