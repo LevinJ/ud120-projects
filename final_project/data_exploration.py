@@ -39,7 +39,9 @@ class Data_Exploration_Proxy:
         plt.scatter(features[:,0],features[:,1], c=colorsList)
         plt.xlabel(features_list[1])
         plt.ylabel(features_list[2])
-        plt.show()
+        showFig = True
+        if showFig:
+            plt.show()
         return
     def __identifyAllZeros(self, features_list):
         #identify the record which has all zeros features

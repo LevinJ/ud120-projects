@@ -10,17 +10,27 @@ import tester
 import numpy as np
 import pandas as pd
 import data_exploration
-
+from sklearn import tree
+from sklearn.feature_selection import SelectKBest,f_classif
 
 class Feature_Selection_Proxy:
     def __init__(self,data_dict):
         self.data_dict = data_dict
+        self.data_dict.pop('TOTAL', 0)
         return
     def run(self):
+        #add new features
         self.__addFractionFeactures() 
         test = data_exploration.Data_Exploration_Proxy(self.data_dict)
+        
+        #now evaluate existing features
         features_list = self.__selectFeatures()
+        #rank feature importance and reorder
+        features_rank =  self.__featureImportance(features_list)
+        features_list = features_list[0:1] +  features_rank.tolist()
+        #visualize and save selected data
         test.run(features_list)
+        
         return
     def __selectFeatures(self):
         feaDict = {}
@@ -28,7 +38,10 @@ class Feature_Selection_Proxy:
         feaDict['2'] = ['poi','from_poi_to_this_person','from_this_person_to_poi']
         feaDict['3'] = ['poi','fraction_from_poi','fraction_to_poi','from_this_person_to_poi','from_messages','from_poi_to_this_person','to_messages']
         feaDict['4'] = ['poi','fraction_from_poi','fraction_to_poi']
-        return feaDict['1']
+        test =  data_exploration.Data_Exploration_Proxy(self.data_dict) 
+        feaDict['5'] = test.getAllFeatures()
+        feaDict['6'] = ['poi','exercised_stock_options', 'expenses', 'other', 'fraction_to_poi']
+        return feaDict['5']
     def __computeFraction(self,poi_messages, all_messages ):
         fraction = 0.
         if (poi_messages == 'NaN'or  all_messages == 'NaN'):
@@ -36,6 +49,29 @@ class Feature_Selection_Proxy:
         else:
             fraction = poi_messages/float(all_messages)
         return fraction
+    def __featureImportance(self,features_list):
+        print "rank feature importance...."
+        data = featureFormat(self.data_dict, features_list, sort_keys = True)
+        labels, features = targetFeatureSplit(data)
+        features = np.array(features)
+        features_list1 = self.__decisiointreeImportance(features, labels, features_list)
+        features_list2 = self.__anovaImportance(features, labels, features_list)
+        
+        return features_list2
+    def __anovaImportance(self, features, labels, features_list):
+        sel = SelectKBest(f_classif, k=2)
+        sel.fit(features, labels)
+        sortIndexes = sel.scores_.argsort()[::-1]
+        features_rank = np.array(features_list[1:])[sortIndexes]
+        print "anova f test importance rank: ", features_rank
+        return features_rank
+    def __decisiointreeImportance(self, features, labels, features_list):
+        clf = tree.DecisionTreeClassifier()
+        clf = clf.fit(features, labels)
+        sortIndexes = clf.feature_importances_.argsort()[::-1]
+        features_rank = np.array(features_list[1:])[sortIndexes]
+        print "decision tree importance rank: ", features_rank
+        return features_rank
     def __addFractionFeactures(self):
         print "add fraction feature to the data dictionary"
         data_dict = self.data_dict
