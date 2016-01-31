@@ -13,15 +13,22 @@ import data_exploration
 from sklearn import tree
 from sklearn.feature_selection import SelectKBest,f_classif
 import feature_selection
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 
 class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
     def run(self):
+        print "#########################Tune on algorithm: ", self.getAlgName(), "######################3"
         self.addFractionFeactures()
-        features_list = self.selectFeatures('7')
-        clf = tree.DecisionTreeClassifier(min_samples_split=20)
+        features_list = self.getFeatureList()
+        clf = self.getClf()
         self.runTrain(clf,features_list)
         self.runTest(clf,features_list)
         return
+#     def getClf(self):
+#         return
+#     def getFeatureList(self):
+#         return
     def runTrain(self,clf,features_list):
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
@@ -66,18 +73,47 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
         print ""
         return
     def runTest(self,clf,features_list):
+        print "test result on stratified cross validation data...."
         dump_classifier_and_data(clf, self.data_dict, features_list)
         tester.main()
         return
 
     
-
+class TuneDecisionTree(Tune_Algorithm_Proxy):
+    def getClf(self):
+        return tree.DecisionTreeClassifier(min_samples_split=20)
+    def getFeatureList(self):
+        return self.selectFeatures('7')
+    def getAlgName(self):
+        return "Decision Tree"
+    
+class TuneNavieBayes(Tune_Algorithm_Proxy):
+    def getClf(self):
+        return GaussianNB()
+    def getFeatureList(self):
+        return self.selectFeatures('7')
+    def getAlgName(self):
+        return "Navie Bayes"
+    
+class TuneSVM(Tune_Algorithm_Proxy):
+    def getClf(self):
+        return SVC(kernel='rbf')
+    def getFeatureList(self):
+        return self.selectFeatures('7')
+    def getAlgName(self):
+        return "Support Vector Machine"
 
 def main():
     with open("final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
-    test =  Tune_Algorithm_Proxy(data_dict) 
-    test.run()
+    dt =  TuneDecisionTree(data_dict) 
+    dt.run()
+    
+    nb =  TuneNavieBayes(data_dict) 
+    nb.run() 
+    
+    svm =  TuneSVM(data_dict) 
+    svm.run() 
 
 if __name__ == '__main__':
     main()
