@@ -61,6 +61,7 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
                 break
     try:
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
+        print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
         accuracy = 1.0*(true_positives + true_negatives)/total_predictions
         precision = 1.0*true_positives/(true_positives+false_positives)
         recall = 1.0*true_positives/(true_positives+false_negatives)
@@ -68,7 +69,6 @@ def test_classifier(clf, dataset, feature_list, folds = 1000):
         f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
         print clf
         print PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5)
-        print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
         print ""
     except:
         print "Got a divide by zero when trying out:", clf

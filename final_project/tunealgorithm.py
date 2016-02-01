@@ -15,6 +15,8 @@ from sklearn.feature_selection import SelectKBest,f_classif
 import feature_selection
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
+from sklearn import preprocessing
+from sklearn.pipeline import Pipeline
 
 class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
     def run(self):
@@ -58,6 +60,9 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
                 print "Evaluating performance for processed predictions:"
                 break
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
+        RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\
+        \tFalse negatives: {:4d}\tTrue negatives: {:4d}"
+        print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
         accuracy = 1.0*(true_positives + true_negatives)/total_predictions
         precision = 1.0*true_positives/(true_positives+false_positives)
         recall = 1.0*true_positives/(true_positives+false_negatives)
@@ -66,10 +71,7 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
         PERF_FORMAT_STRING = "\
         \tAccuracy: {:>0.{display_precision}f}\tPrecision: {:>0.{display_precision}f}\t\
         Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{display_precision}f}"
-        RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\
-        \tFalse negatives: {:4d}\tTrue negatives: {:4d}"
         print PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5)
-        print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
         print ""
         return
     def runTest(self,clf,features_list):
@@ -97,7 +99,10 @@ class TuneNavieBayes(Tune_Algorithm_Proxy):
     
 class TuneSVM(Tune_Algorithm_Proxy):
     def getClf(self):
-        return SVC(kernel='rbf')
+        clf = SVC(kernel='rbf',C=5, gamma=200)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
+        return clf
     def getFeatureList(self):
         return self.selectFeatures('7')
     def getAlgName(self):
@@ -106,11 +111,11 @@ class TuneSVM(Tune_Algorithm_Proxy):
 def main():
     with open("final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
-    dt =  TuneDecisionTree(data_dict) 
-    dt.run()
-    
-    nb =  TuneNavieBayes(data_dict) 
-    nb.run() 
+#     dt =  TuneDecisionTree(data_dict) 
+#     dt.run()
+#     
+#     nb =  TuneNavieBayes(data_dict) 
+#     nb.run() 
     
     svm =  TuneSVM(data_dict) 
     svm.run() 
