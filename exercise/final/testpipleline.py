@@ -4,6 +4,9 @@ from sklearn.svm import SVC
 from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
 import numpy as np
+from sklearn.grid_search import GridSearchCV
+import tester
+from sklearn.cross_validation import StratifiedShuffleSplit
 
 sys.path.append("../../tools/")
 from feature_format import featureFormat, targetFeatureSplit
@@ -44,11 +47,12 @@ def dispEvalResult(predictions, labels_test):
         return
 
 
+
 with open("../../final_project/final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
 
 data_dict.pop('TOTAL', 0)
-features_list = ['poi','bonus','salary']
+features_list = ['poi','exercised_stock_options', 'expenses']
 data = featureFormat(data_dict, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 features = np.array(features)
@@ -57,12 +61,22 @@ features = np.array(features)
 scaler = min_max_scaler = preprocessing.MinMaxScaler()
 # features = scaler.fit_transform(features)
 
+tuned_parameters = [
+  {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+  {'C': [1, 10, 100, 1000], 'gamma': [10, 100, 1000,5000,10000], 'kernel': ['rbf']},
+ ]
+score = 'recall'
+
+
 min_max_scaler = preprocessing.MinMaxScaler()
-clf = SVC(kernel='rbf',C=100, gamma=10000)
-clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
+features = min_max_scaler.fit_transform(features)
+
+clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=StratifiedShuffleSplit(labels, 1000, random_state = 42),
+                       scoring='f1')
+# clf = SVC(kernel='rbf',C=100, gamma=10000)
+# clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
 
 clf.fit(features, labels)
-predictions = clf.predict(features)
-
-
-dispEvalResult(predictions, labels)
+print clf.best_params_
+print clf.best_score_
+tester.test_classifier(clf.best_estimator_, labels, features)

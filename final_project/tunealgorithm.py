@@ -17,6 +17,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
+import  easytester
+from sklearn.grid_search import GridSearchCV
+from sklearn.cross_validation import StratifiedShuffleSplit
 
 class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
     def run(self):
@@ -99,10 +102,31 @@ class TuneNavieBayes(Tune_Algorithm_Proxy):
     
 class TuneSVM(Tune_Algorithm_Proxy):
     def getClf(self):
-        clf = SVC(kernel='rbf',C=5, gamma=200)
+        clf = SVC(kernel='rbf',C=45, gamma=200)
         min_max_scaler = preprocessing.MinMaxScaler()
         clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
         return clf
+    def runGridGridSearchCV(self):
+        print "######################### runGridGridSearchCV: ", self.getAlgName(), "######################3"
+        self.addFractionFeactures()
+        features_list = self.getFeatureList()
+        clf = self.getClf()
+        data = featureFormat(self.data_dict, features_list, sort_keys = True)
+        labels, features = targetFeatureSplit(data)
+        features = np.array(features)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        features = min_max_scaler.fit_transform(features)
+
+        tuned_parameters = [
+          {'C': [1, 5, 15, 45], 'gamma': [120, 180, 200,240,1000], 'kernel': ['rbf']},
+         ]
+        clf = GridSearchCV(clf, tuned_parameters, cv=StratifiedShuffleSplit(labels, 100, random_state = 42),
+                       scoring='f1')
+        clf.fit(features, labels)
+        print clf.best_params_
+        print clf.best_score_
+        easytester.test_classifier(clf.best_estimator_, labels, features)
+        return
     def getFeatureList(self):
         return self.selectFeatures('7')
     def getAlgName(self):
@@ -118,7 +142,8 @@ def main():
 #     nb.run() 
     
     svm =  TuneSVM(data_dict) 
-    svm.run() 
+    svm.run()
+#     svm.runGridGridSearchCV() 
 
 if __name__ == '__main__':
     main()
