@@ -34,6 +34,24 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
 #         return
 #     def getFeatureList(self):
 #         return
+    def runGridGridSearchCV(self):
+        print "######################### runGridGridSearchCV: ", self.getAlgName(), "######################3"
+        self.addFractionFeactures()
+        features_list = self.getFeatureList()
+        clf = self.getClf(usepipeine = False)
+        data = featureFormat(self.data_dict, features_list, sort_keys = True)
+        labels, features = targetFeatureSplit(data)
+        features = np.array(features)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        features = min_max_scaler.fit_transform(features)
+        # do grid search
+        clf = GridSearchCV(clf, self.getTunedParamterOptions(), cv=StratifiedShuffleSplit(labels, 100, random_state = 42),
+                       scoring='f1')
+        clf.fit(features, labels)
+        print clf.best_params_
+        print clf.best_score_
+        easytester.test_classifier(clf.best_estimator_, labels, features)
+        return
     def runTrain(self,clf,features_list):
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
@@ -85,10 +103,15 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
 
     
 class TuneDecisionTree(Tune_Algorithm_Proxy):
-    def getClf(self):
-        return tree.DecisionTreeClassifier(min_samples_split=20)
+    def getClf(self,usepipeine = True):
+        return tree.DecisionTreeClassifier(min_samples_split=1)
     def getFeatureList(self):
         return self.selectFeatures('7')
+    def getTunedParamterOptions(self):
+        tuned_parameters = [
+          {'min_samples_split': [1, 2,3, 4, 5, 6,7,8,9]},
+         ]
+        return tuned_parameters
     def getAlgName(self):
         return "Decision Tree"
     
@@ -101,32 +124,19 @@ class TuneNavieBayes(Tune_Algorithm_Proxy):
         return "Navie Bayes"
     
 class TuneSVM(Tune_Algorithm_Proxy):
-    def getClf(self):
+    def getClf(self,usepipeine = True):
         clf = SVC(kernel='rbf',C=45, gamma=200)
+        if not usepipeine:
+            return clf
         min_max_scaler = preprocessing.MinMaxScaler()
         clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
         return clf
-    def runGridGridSearchCV(self):
-        print "######################### runGridGridSearchCV: ", self.getAlgName(), "######################3"
-        self.addFractionFeactures()
-        features_list = self.getFeatureList()
-        clf = self.getClf()
-        data = featureFormat(self.data_dict, features_list, sort_keys = True)
-        labels, features = targetFeatureSplit(data)
-        features = np.array(features)
-        min_max_scaler = preprocessing.MinMaxScaler()
-        features = min_max_scaler.fit_transform(features)
-
-        tuned_parameters = [
+    def getTunedParamterOptions(self):
+        tuned_parameters = tuned_parameters = [
           {'C': [1, 5, 15, 45], 'gamma': [120, 180, 200,240,1000], 'kernel': ['rbf']},
          ]
-        clf = GridSearchCV(clf, tuned_parameters, cv=StratifiedShuffleSplit(labels, 100, random_state = 42),
-                       scoring='f1')
-        clf.fit(features, labels)
-        print clf.best_params_
-        print clf.best_score_
-        easytester.test_classifier(clf.best_estimator_, labels, features)
-        return
+        return tuned_parameters
+    
     def getFeatureList(self):
         return self.selectFeatures('7')
     def getAlgName(self):
@@ -135,14 +145,15 @@ class TuneSVM(Tune_Algorithm_Proxy):
 def main():
     with open("final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
-#     dt =  TuneDecisionTree(data_dict) 
+    dt =  TuneDecisionTree(data_dict) 
 #     dt.run()
+#     dt.runGridGridSearchCV()
 #     
-#     nb =  TuneNavieBayes(data_dict) 
-#     nb.run() 
+    nb =  TuneNavieBayes(data_dict) 
+    nb.run() 
     
-    svm =  TuneSVM(data_dict) 
-    svm.run()
+#     svm =  TuneSVM(data_dict) 
+#     svm.run()
 #     svm.runGridGridSearchCV() 
 
 if __name__ == '__main__':
