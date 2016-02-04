@@ -1,0 +1,45 @@
+          f1  precision  recall  best_score                best_params  \
+15  0.452374   0.501522  0.4120    0.458714  {u'min_samples_split': 4}   
+10  0.412883   0.534127  0.3365    0.442524  {u'min_samples_split': 5}   
+1   0.311197   0.301976  0.3210    0.195333  {u'min_samples_split': 1}   
+0   0.302882   0.296084  0.3100    0.298333  {u'min_samples_split': 7}   
+3   0.266122   0.224828  0.3260    0.263667  {u'min_samples_split': 1}   
+6   0.256081   0.290425  0.2290    0.236778  {u'min_samples_split': 9}   
+13  0.255547   0.260802  0.2505    0.255048  {u'min_samples_split': 4}   
+5   0.218540   0.197891  0.2440    0.140667  {u'min_samples_split': 8}   
+4   0.189936   0.187439  0.1925    0.192190  {u'min_samples_split': 6}   
+2   0.144578   0.151815  0.1380    0.122000  {u'min_samples_split': 3}   
+19  0.134293   0.129032  0.1400    0.091667  {u'min_samples_split': 8}   
+16  0.130620   0.123989  0.1380    0.071333  {u'min_samples_split': 1}   
+17  0.121104   0.149014  0.1020    0.130524  {u'min_samples_split': 4}   
+7   0.101266   0.144311  0.0780    0.050857  {u'min_samples_split': 4}   
+9   0.097253   0.131962  0.0770    0.066333  {u'min_samples_split': 1}   
+18  0.064339   0.101952  0.0470    0.013333  {u'min_samples_split': 1}   
+12  0.006683   0.006393  0.0070    0.004000  {u'min_samples_split': 7}   
+8   0.004175   0.004367  0.0040    0.005000  {u'min_samples_split': 1}   
+11  0.000000   0.000000  0.0000    0.000000  {u'min_samples_split': 1}   
+14  0.000000   0.000000  0.0000    0.000000  {u'min_samples_split': 1}   
+
+                        feature_list  
+15          [poi, fraction_from_poi]  
+10                      [poi, bonus]  
+1     [poi, shared_receipt_with_poi]  
+0     [poi, exercised_stock_options]  
+3             [poi, fraction_to_poi]  
+6           [poi, total_stock_value]  
+13                     [poi, salary]  
+5         [poi, long_term_incentive]  
+4                       [poi, other]  
+2                    [poi, expenses]  
+19                [poi, to_messages]  
+16            [poi, deferred_income]  
+17             [poi, total_payments]  
+7            [poi, restricted_stock]  
+9     [poi, from_poi_to_this_person]  
+18          [poi, deferral_payments]  
+12              [poi, from_messages]  
+8     [poi, from_this_person_to_poi]  
+11              [poi, director_fees]  
+14  [poi, restricted_stock_deferred]  
+@@@@@@@best combinations:  [[0.4523744166895416 0.5015216068167986 0.412 0.4587142857142856
+  {'min_samples_split': 4} ['poi', 'fraction_from_poi']]]

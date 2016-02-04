@@ -1,0 +1,62 @@
+          f1  precision  recall  best_score  \
+10  0.471410   0.646341  0.3710    0.428667   
+15  0.449023   0.775460  0.3160    0.372000   
+9   0.413043   0.691315  0.2945    0.340000   
+12  0.348495   0.580420  0.2490    0.308667   
+8   0.347435   0.691505  0.2320    0.340333   
+5   0.329947   0.550877  0.2355    0.284333   
+4   0.324841   0.555690  0.2295    0.287000   
+2   0.323326   0.702341  0.2100    0.262333   
+3   0.318466   0.732014  0.2035    0.253333   
+11  0.310226   0.662848  0.2025    0.251333   
+13  0.241213   0.463727  0.1630    0.220000   
+7   0.221597   0.373665  0.1575    0.222333   
+16  0.210300   0.742424  0.1225    0.216667   
+6   0.205895   0.706745  0.1205    0.166667   
+1   0.176193   0.626911  0.1025    0.122333   
+17  0.175506   0.370370  0.1150    0.143333   
+0   0.093004   0.243129  0.0575    0.044667   
+14  0.004977   0.014599  0.0030    0.006667   
+
+                                       best_params  \
+10    {u'kernel': u'rbf', u'C': 45, u'gamma': 120}   
+15    {u'kernel': u'rbf', u'C': 45, u'gamma': 200}   
+9     {u'kernel': u'rbf', u'C': 15, u'gamma': 120}   
+12    {u'kernel': u'rbf', u'C': 45, u'gamma': 120}   
+8     {u'kernel': u'rbf', u'C': 15, u'gamma': 200}   
+5   {u'kernel': u'rbf', u'C': 1000, u'gamma': 120}   
+4     {u'kernel': u'rbf', u'C': 15, u'gamma': 120}   
+2      {u'kernel': u'rbf', u'C': 5, u'gamma': 200}   
+3      {u'kernel': u'rbf', u'C': 5, u'gamma': 240}   
+11     {u'kernel': u'rbf', u'C': 5, u'gamma': 120}   
+13    {u'kernel': u'rbf', u'C': 45, u'gamma': 120}   
+7     {u'kernel': u'rbf', u'C': 45, u'gamma': 120}   
+16    {u'kernel': u'rbf', u'C': 5, u'gamma': 1500}   
+6     {u'kernel': u'rbf', u'C': 5, u'gamma': 1500}   
+1      {u'kernel': u'rbf', u'C': 5, u'gamma': 240}   
+17     {u'kernel': u'rbf', u'C': 5, u'gamma': 180}   
+0      {u'kernel': u'rbf', u'C': 5, u'gamma': 120}   
+14     {u'kernel': u'rbf', u'C': 5, u'gamma': 120}   
+
+                                         feature_list  
+10  [poi, exercised_stock_options, fraction_to_poi...  
+15  [poi, exercised_stock_options, fraction_to_poi...  
+9   [poi, exercised_stock_options, fraction_to_poi...  
+12  [poi, exercised_stock_options, fraction_to_poi...  
+8   [poi, exercised_stock_options, fraction_to_poi...  
+5   [poi, exercised_stock_options, fraction_to_poi...  
+4   [poi, exercised_stock_options, fraction_to_poi...  
+2   [poi, exercised_stock_options, fraction_to_poi...  
+3   [poi, exercised_stock_options, fraction_to_poi...  
+11  [poi, exercised_stock_options, fraction_to_poi...  
+13  [poi, exercised_stock_options, fraction_to_poi...  
+7   [poi, exercised_stock_options, fraction_to_poi...  
+16  [poi, exercised_stock_options, fraction_to_poi...  
+6   [poi, exercised_stock_options, fraction_to_poi...  
+1   [poi, exercised_stock_options, fraction_to_poi...  
+17  [poi, exercised_stock_options, fraction_to_poi...  
+0   [poi, exercised_stock_options, fraction_to_poi...  
+14  [poi, exercised_stock_options, fraction_to_poi...  
+@@@@@@@best combinations:  [[0.4714104193138501 0.6463414634146342 0.371 0.42866666666666675
+  {'kernel': 'rbf', 'C': 45, 'gamma': 120}
+  ['poi', 'exercised_stock_options', 'fraction_to_poi', 'from_poi_to_this_person', 'loan_advances']]]

@@ -26,6 +26,9 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
         feature_selection.Feature_Selection_Proxy.__init__(self, data_dict)
         self.addFractionFeactures()
         return
+    def setFeatureList(self, selected_features):
+        self.selected_features = selected_features
+        return
     def run(self):
         print "#########################Tune on algorithm: ", self.getAlgName(), "######################3"
         self.addFractionFeactures()
@@ -110,6 +113,8 @@ class TuneDecisionTree(Tune_Algorithm_Proxy):
     def getClf(self,usepipeine = True):
         return tree.DecisionTreeClassifier(min_samples_split=1)
     def getFeatureList(self):
+        if hasattr(self, 'selected_features'):
+            return self.selected_features
         return self.selectFeatures('7')
     def getTunedParamterOptions(self):
         tuned_parameters = [
@@ -136,14 +141,10 @@ class TuneSVM(Tune_Algorithm_Proxy):
         clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
         return clf
     def getTunedParamterOptions(self):
-        tuned_parameters = tuned_parameters = [
+        tuned_parameters = [
           {'C': [1, 5, 15, 45,100,500,1000,1500], 'gamma': [120, 180, 200,240,1000,1500,3000,5000,7000,9000,10000], 'kernel': ['rbf']},
          ]
         return tuned_parameters
-    
-    def setFeatureList(self, selected_features):
-        self.selected_features = selected_features
-        return
     def getFeatureList(self):
         if hasattr(self, 'selected_features'):
             return self.selected_features

@@ -1,0 +1,62 @@
+          f1  precision  recall  best_score  \
+0   0.439858   0.762963  0.3090    0.350000   
+10  0.425228   0.607807  0.3270    0.438333   
+13  0.400692   0.473111  0.3475    0.395381   
+1   0.353859   0.300139  0.4310    0.285667   
+3   0.328104   0.297319  0.3660    0.320333   
+12  0.259817   0.488276  0.1770    0.215000   
+2   0.225791   0.223145  0.2285    0.204922   
+14  0.216428   0.191391  0.2490    0.126333   
+9   0.191279   0.358025  0.1305    0.121667   
+17  0.179140   0.218077  0.1520    0.113333   
+5   0.162312   0.182728  0.1460    0.128333   
+6   0.162073   0.457077  0.0985    0.116667   
+7   0.148967   0.259305  0.1045    0.141333   
+15  0.101382   0.218543  0.0660    0.110000   
+4   0.065858   0.107345  0.0475    0.049667   
+16  0.052250   0.095238  0.0360    0.013333   
+8   0.010357   0.012195  0.0090    0.017333   
+11  0.001735   0.006536  0.0010    0.005000   
+
+                                         best_params  \
+0        {u'kernel': u'rbf', u'C': 5, u'gamma': 120}   
+10      {u'kernel': u'rbf', u'C': 45, u'gamma': 240}   
+13  {u'kernel': u'rbf', u'C': 1000, u'gamma': 10000}   
+1    {u'kernel': u'rbf', u'C': 1000, u'gamma': 3000}   
+3     {u'kernel': u'rbf', u'C': 100, u'gamma': 3000}   
+12     {u'kernel': u'rbf', u'C': 100, u'gamma': 120}   
+2   {u'kernel': u'rbf', u'C': 1500, u'gamma': 10000}   
+14   {u'kernel': u'rbf', u'C': 1000, u'gamma': 3000}   
+9     {u'kernel': u'rbf', u'C': 1500, u'gamma': 240}   
+17    {u'kernel': u'rbf', u'C': 500, u'gamma': 1000}   
+5       {u'kernel': u'rbf', u'C': 45, u'gamma': 240}   
+6      {u'kernel': u'rbf', u'C': 500, u'gamma': 180}   
+7    {u'kernel': u'rbf', u'C': 500, u'gamma': 10000}   
+15  {u'kernel': u'rbf', u'C': 1000, u'gamma': 10000}   
+4    {u'kernel': u'rbf', u'C': 1500, u'gamma': 7000}   
+16    {u'kernel': u'rbf', u'C': 100, u'gamma': 9000}   
+8   {u'kernel': u'rbf', u'C': 1500, u'gamma': 10000}   
+11   {u'kernel': u'rbf', u'C': 500, u'gamma': 10000}   
+
+                      feature_list  
+0   [poi, exercised_stock_options]  
+10                    [poi, bonus]  
+13        [poi, fraction_from_poi]  
+1   [poi, shared_receipt_with_poi]  
+3           [poi, fraction_to_poi]  
+12                   [poi, salary]  
+2                  [poi, expenses]  
+14          [poi, deferred_income]  
+9   [poi, from_poi_to_this_person]  
+17              [poi, to_messages]  
+5       [poi, long_term_incentive]  
+6         [poi, total_stock_value]  
+7          [poi, restricted_stock]  
+15           [poi, total_payments]  
+4                     [poi, other]  
+16        [poi, deferral_payments]  
+8   [poi, from_this_person_to_poi]  
+11            [poi, from_messages]  
+@@@@@@@best combinations:  [[0.4398576512455516 0.762962962962963 0.309 0.35
+  {'kernel': 'rbf', 'C': 5, 'gamma': 120}
+  ['poi', 'exercised_stock_options']]]

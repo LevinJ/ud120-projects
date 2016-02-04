@@ -11,12 +11,14 @@ import feature_selection
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn import preprocessing
+from sklearn import tree
 
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi', 'exercised_stock_options', 'fraction_to_poi', 'from_poi_to_this_person'] # You will need to use more features
+# features_list = ['poi', 'exercised_stock_options', 'fraction_to_poi', 'from_poi_to_this_person'] # You will need to use more features
+features_list = ['poi', 'fraction_from_poi'] # You will need to use more features
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
@@ -44,9 +46,14 @@ labels, features = targetFeatureSplit(data)
 # from sklearn.naive_bayes import GaussianNB
 # clf = GaussianNB()
 
-clf = SVC(kernel='rbf',C=45, gamma=120)
-min_max_scaler = preprocessing.MinMaxScaler()
-clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
+####SVM
+# clf = SVC(kernel='rbf',C=45, gamma=120)
+# min_max_scaler = preprocessing.MinMaxScaler()
+# clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
+
+### Tree
+clf = tree.DecisionTreeClassifier(min_samples_split=4)
+
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
