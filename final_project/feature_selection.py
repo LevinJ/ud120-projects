@@ -24,7 +24,7 @@ class Feature_Selection_Proxy:
         test = data_exploration.Data_Exploration_Proxy(self.data_dict)
         
         #now evaluate existing features
-        features_list = self.selectFeatures('7')
+        features_list = self.selectFeatures('5')
         #rank feature importance and reorder
         features_rank =  self.__featureImportance(features_list)
         features_list = features_list[0:1] +  features_rank.tolist()
@@ -58,7 +58,7 @@ class Feature_Selection_Proxy:
         features_list1 = self.__decisiointreeImportance(features, labels, features_list)
         features_list2 = self.__anovaImportance(features, labels, features_list)
         
-        return features_list2
+        return features_list1
     def __anovaImportance(self, features, labels, features_list):
         sel = SelectKBest(f_classif, k=2)
         sel.fit(features, labels)

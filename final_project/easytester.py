@@ -46,6 +46,9 @@ def test_classifier(clf, labels, features, folds = 1000):
                 print "Evaluating performance for processed predictions:"
                 break
     try:
+        f1 = 0
+        precision = 0
+        recall = 0
         total_predictions = true_negatives + false_negatives + false_positives + true_positives
         print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
         accuracy = 1.0*(true_positives + true_negatives)/total_predictions
@@ -59,3 +62,5 @@ def test_classifier(clf, labels, features, folds = 1000):
     except:
         print "Got a divide by zero when trying out:", clf
         print "Precision or recall may be undefined due to a lack of true positive predicitons."
+        
+    return f1,precision,recall

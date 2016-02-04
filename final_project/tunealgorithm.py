@@ -22,6 +22,10 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedShuffleSplit
 
 class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
+    def __init__(self,data_dict):
+        feature_selection.Feature_Selection_Proxy.__init__(self, data_dict)
+        self.addFractionFeactures()
+        return
     def run(self):
         print "#########################Tune on algorithm: ", self.getAlgName(), "######################3"
         self.addFractionFeactures()
@@ -36,8 +40,8 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
 #         return
     def runGridGridSearchCV(self):
         print "######################### runGridGridSearchCV: ", self.getAlgName(), "######################3"
-        self.addFractionFeactures()
         features_list = self.getFeatureList()
+        print "Test feature list: ", features_list
         clf = self.getClf(usepipeine = False)
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
@@ -49,9 +53,9 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
                        scoring='f1')
         clf.fit(features, labels)
         print clf.best_params_
-        print clf.best_score_
-        easytester.test_classifier(clf.best_estimator_, labels, features)
-        return
+        print clf.best_score_ 
+        f1,precision,recall = easytester.test_classifier(clf.best_estimator_, labels, features)
+        return f1,precision,recall, clf.best_score_ , clf.best_params_, features_list
     def runTrain(self,clf,features_list):
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
@@ -133,11 +137,16 @@ class TuneSVM(Tune_Algorithm_Proxy):
         return clf
     def getTunedParamterOptions(self):
         tuned_parameters = tuned_parameters = [
-          {'C': [1, 5, 15, 45], 'gamma': [120, 180, 200,240,1000], 'kernel': ['rbf']},
+          {'C': [1, 5, 15, 45,100,500,1000,1500], 'gamma': [120, 180, 200,240,1000,1500,3000,5000,7000,9000,10000], 'kernel': ['rbf']},
          ]
         return tuned_parameters
     
+    def setFeatureList(self, selected_features):
+        self.selected_features = selected_features
+        return
     def getFeatureList(self):
+        if hasattr(self, 'selected_features'):
+            return self.selected_features
         return self.selectFeatures('7')
     def getAlgName(self):
         return "Support Vector Machine"
@@ -145,16 +154,17 @@ class TuneSVM(Tune_Algorithm_Proxy):
 def main():
     with open("final_project_dataset.pkl", "r") as data_file:
         data_dict = pickle.load(data_file)
-    dt =  TuneDecisionTree(data_dict) 
+#     dt =  TuneDecisionTree(data_dict) 
 #     dt.run()
 #     dt.runGridGridSearchCV()
 #     
-    nb =  TuneNavieBayes(data_dict) 
-    nb.run() 
+#     nb =  TuneNavieBayes(data_dict) 
+#     nb.run() 
     
-#     svm =  TuneSVM(data_dict) 
+    svm =  TuneSVM(data_dict) 
+    svm.setFeatureList(['poi','exercised_stock_options', 'fraction_to_poi'])
 #     svm.run()
-#     svm.runGridGridSearchCV() 
+    svm.runGridGridSearchCV() 
 
 if __name__ == '__main__':
     main()
