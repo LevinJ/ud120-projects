@@ -89,7 +89,7 @@ class Feature_Selection_Proxy:
             from_messages = data_point["from_messages"]
             fraction_to_poi = self.__computeFraction( from_this_person_to_poi, from_messages )
             data_point["fraction_to_poi"] = fraction_to_poi
-        return
+        return data_dict
     
     
 

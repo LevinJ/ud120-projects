@@ -7,12 +7,16 @@ sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
 import tester
+import feature_selection
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn import preprocessing
 
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
+features_list = ['poi', 'exercised_stock_options', 'fraction_to_poi', 'from_poi_to_this_person'] # You will need to use more features
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
@@ -22,6 +26,9 @@ with open("final_project_dataset.pkl", "r") as data_file:
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
+
+feasel = feature_selection.Feature_Selection_Proxy(my_dataset)
+my_dataset = feasel.addFractionFeactures()
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
@@ -34,8 +41,12 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
 # Provided to give you a starting point. Try a variety of classifiers.
-from sklearn.naive_bayes import GaussianNB
-clf = GaussianNB()
+# from sklearn.naive_bayes import GaussianNB
+# clf = GaussianNB()
+
+clf = SVC(kernel='rbf',C=45, gamma=120)
+min_max_scaler = preprocessing.MinMaxScaler()
+clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
