@@ -10,7 +10,7 @@ class ForwardFeatureSel:
             data_dict = pickle.load(data_file)
         clfDict = {'1': tunealgorithm.TuneSVM(data_dict), '2':tunealgorithm.TuneDecisionTree(data_dict)}
         self.clf =  clfDict['2']
-        self.result = {'f1':[],'precision':[],'recall':[],'best_score':[], 'best_params':[], 'feature_list':[]}
+        self.result = []
         self.featureList =  ['exercised_stock_options', 'shared_receipt_with_poi', 'expenses',
                              'fraction_to_poi', 'other', 'long_term_incentive', 'total_stock_value',
                              'restricted_stock', 'from_this_person_to_poi', 'from_poi_to_this_person',
@@ -18,22 +18,14 @@ class ForwardFeatureSel:
                              'restricted_stock_deferred', 'fraction_from_poi', 'deferred_income',
                              'total_payments', 'deferral_payments', 'to_messages']
         return
-#     def getFeatureCombinaiton(self, numFea):
-#         res = [list(x) for x in itertools.combinations(self.featureList, numFea)]
-#         return res
     
     def selectBestFeaturList(self, featureLists):
         for fealist in featureLists:
             try:
                 fealist.insert(0, 'poi')
                 self.clf.setFeatureList(fealist)
-                f1, precision,recall, best_score , best_params, feature_list =  self.clf.runGridGridSearchCV() 
-                self.result['f1'].append(f1)
-                self.result['precision'].append(precision)
-                self.result['recall'].append(recall)
-                self.result['best_score'].append(best_score)
-                self.result['best_params'].append(best_params)
-                self.result['feature_list'].append(feature_list)
+                res =  self.clf.runGridGridSearchCV() 
+                self.result.append(res)
             except Exception as inst:
                 print "XXXXXXX Ignore this combinationXXXXXX", inst, "featues used:  ", fealist
         self.disResult()
