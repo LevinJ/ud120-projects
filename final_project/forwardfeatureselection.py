@@ -9,7 +9,7 @@ class ForwardFeatureSel:
         with open("final_project_dataset.pkl", "r") as data_file:
             data_dict = pickle.load(data_file)
         clfDict = {'1': tunealgorithm.TuneSVM(data_dict), '2':tunealgorithm.TuneDecisionTree(data_dict)}
-        self.clf =  clfDict['2']
+        self.clf =  clfDict['1']
         self.result = []
         self.featureList =  ['exercised_stock_options', 'shared_receipt_with_poi', 'expenses',
                              'fraction_to_poi', 'other', 'long_term_incentive', 'total_stock_value',
@@ -42,7 +42,7 @@ class ForwardFeatureSel:
         #round 3  'fraction_from_poi', 'deferral_payments', 'restricted_stock_deferred', 0.4512293974601459 0.49088771310993534 0.4175 0.4159999999999998, {'min_samples_split': 3}
         #round 4  'fraction_from_poi', 'deferral_payments', 'restricted_stock_deferred', 'director_fees', 0.4675253494107975 0.5172832019405701 0.4265 0.44504761904761914, {'min_samples_split': 3}
         #round 5 'fraction_from_poi', 'deferral_payments', 'restricted_stock_deferred', 'director_fees', 'loan_advances',0.430987452264048 0.47418967587034816 0.395 0.39338095238095244,{'min_samples_split': 1}
-        featureLists =  self.generateFeatureList(['fraction_from_poi', 'deferral_payments','restricted_stock_deferred','director_fees'])
+        featureLists =  self.generateFeatureList(['exercised_stock_options', 'fraction_to_poi'])
         self.selectBestFeaturList(featureLists)
         
         return
