@@ -62,16 +62,18 @@ scaler = min_max_scaler = preprocessing.MinMaxScaler()
 # features = scaler.fit_transform(features)
 
 tuned_parameters = [
-  {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
-  {'C': [1, 10, 100, 1000], 'gamma': [10, 100, 1000,5000,10000], 'kernel': ['rbf']},
+  {'svc__C': [100, 1000], 'svc__gamma': [10, 100, 10000], 'svc__kernel': ['rbf']},
  ]
 score = 'recall'
 
 
 min_max_scaler = preprocessing.MinMaxScaler()
-features = min_max_scaler.fit_transform(features)
+# features = min_max_scaler.fit_transform(features)
 
-clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=StratifiedShuffleSplit(labels, 1000, random_state = 42),
+
+clf = SVC(C=1)
+clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
+clf = GridSearchCV(clf, tuned_parameters, cv=StratifiedShuffleSplit(labels, 10, random_state = 42),
                        scoring='f1')
 # clf = SVC(kernel='rbf',C=100, gamma=10000)
 # clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])

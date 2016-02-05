@@ -45,12 +45,10 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
         print "######################### runGridGridSearchCV: ", self.getAlgName(), "######################3"
         features_list = self.getFeatureList()
         print "Test feature list: ", features_list
-        clf = self.getClf(usepipeine = False)
+        clf = self.getClf()
         data = featureFormat(self.data_dict, features_list, sort_keys = True)
         labels, features = targetFeatureSplit(data)
         features = np.array(features)
-        min_max_scaler = preprocessing.MinMaxScaler()
-        features = min_max_scaler.fit_transform(features)
         # do grid search
         clf = GridSearchCV(clf, self.getTunedParamterOptions(), cv=StratifiedShuffleSplit(labels, 100, random_state = 42),
                        scoring='f1')
@@ -110,7 +108,7 @@ class Tune_Algorithm_Proxy(feature_selection.Feature_Selection_Proxy):
 
     
 class TuneDecisionTree(Tune_Algorithm_Proxy):
-    def getClf(self,usepipeine = True):
+    def getClf(self):
         return tree.DecisionTreeClassifier(min_samples_split=1)
     def getFeatureList(self):
         if hasattr(self, 'selected_features'):
@@ -133,16 +131,14 @@ class TuneNavieBayes(Tune_Algorithm_Proxy):
         return "Navie Bayes"
     
 class TuneSVM(Tune_Algorithm_Proxy):
-    def getClf(self,usepipeine = True):
-        clf = SVC(kernel='rbf',C=45, gamma=200)
-        if not usepipeine:
-            return clf
+    def getClf(self):
+        clf = SVC(kernel='rbf',C=100, gamma=180)
         min_max_scaler = preprocessing.MinMaxScaler()
         clf = Pipeline([('scaler', min_max_scaler), ('svc', clf)])
         return clf
     def getTunedParamterOptions(self):
         tuned_parameters = [
-          {'C': [1, 5, 15, 45,100,500,1000,1500], 'gamma': [120, 180, 200,240,1000,1500,3000,5000,7000,9000,10000], 'kernel': ['rbf']},
+          {'svc__C': [1, 5, 15, 45,100,500,1000,1500], 'svc__gamma': [120, 180, 200,240,1000,1500,3000,5000,7000,9000,10000], 'svc__kernel': ['rbf']},
          ]
         return tuned_parameters
     def getFeatureList(self):
@@ -164,7 +160,7 @@ def main():
     
     svm =  TuneSVM(data_dict) 
     svm.setFeatureList(['poi','exercised_stock_options', 'fraction_to_poi'])
-#     svm.run()
+    svm.run()
     svm.runGridGridSearchCV() 
 
 if __name__ == '__main__':
